@@ -96,22 +96,22 @@ bin/hadoop jar `<workflow>`.jar ca.uvic.csc.research.`<workflow>` -D mapred.max.
 `<split>` specifies the maximum size of a segment of input. Set this to (size of input file)/(number of mappers desired) bytes, rounding up.
 
 `<options>` is a placeholder for some extra '-D' lines that may be added depending on algorithm.
-	+ Due to the way the Naive algorithm operates, some reducers may time out due to the way (and the amount of time taken as) they compute data. If this occurs, add "-D mapred.task.timeout=1800000" to extend the timeout range.
-	+ "-D mapred.compress.map.output=true" may be added to any workflow to compress intermediate output.
+	+ Due to the way the Naive algorithm operates, some reducers may time out due to the way (and the amount of time taken as) they compute data. If this occurs, add `-D mapred.task.timeout=1800000` to extend the timeout range.
+	+ `-D mapred.compress.map.output=true` may be added to any workflow to compress intermediate output.
 
 `<input>` should be the location in the HDFS of the input to the join algorithm. 
 
 `<output>` should be the output location in HDFS; it also accepts several special values. 'null', 'null-cost', and 'null-absolute' all cause no output to be saved, but there are slight differences in what happens under the hood:
-	+ 'null' emits reducer output, using Hadoop's NullOutputFormat. Data will be emitted but not written.
-	+ 'null-absolute' does _not_ emit reducer output, instead incrementing a variable of records emitted. This variable is not given to Hadoop, and instead serves to prevent the possibility of the output step being compiled out entirely.
-	+ 'null-cost' replaces the workflow's reducer class with a dummy class that ignores all input it receives. No reducer processing will be performed; the reducer will exit once all its input has been read.
++ 'null' emits reducer output, using Hadoop's NullOutputFormat. Data will be emitted but not written.
++ 'null-absolute' does _not_ emit reducer output, instead incrementing a variable of records emitted. This variable is not given to Hadoop, and instead serves to prevent the possibility of the output step being compiled out entirely.
++ 'null-cost' replaces the workflow's reducer class with a dummy class that ignores all input it receives. No reducer processing will be performed; the reducer will exit once all its input has been read.
 	These special values are intended for use in testing and benchmarking.
 	
 `<threshold>` determines the maximum number of bits that may be different between two strings of bits for them to be deemed as similar.
 	
 `<settings>` must be included for each algorithm, but they vary depending on which is used:
-	+ For the Naive algorithm, there is one value: `<granularity>`. This value represents the number of reducers to be used; if granularity is some (n), then ((n)*(n+1))/2 reducers will be used. Higher granularity values increase paralellism and should result in faster job completion; this comes at the cost of increasing communication cost proportional to the granularity value (it acts as a linear multiplier). In practice, the communication cost is typically smalller than the reducer processing time for this algorithm, so the granularity should be set to the value where it uses as many of your reducers as possible.
-	+ For all other algorithms, there are two values: `<num_reducers>` and `<universe_size>`. `<num_reducers>` tells the partitioner how many parts to divide the mapper output into; this number should be equal, or slightly less than, the number of reducers you have. `<universe_size>` sets the size of the universe of strings that the algorithm should check, and may be used to restrict the algorithms to universes of strings smaller than 32 bits. Do *not* set this value to 32 and ignore it if you are using a smaller universe, for horrible slowdowns await.	
++ For the Naive algorithm, there is one value: `<granularity>`. This value represents the number of reducers to be used; if granularity is some (n), then ((n)\*(n+1))/2 reducers will be used. Higher granularity values increase paralellism and should result in faster job completion; this comes at the cost of increasing communication cost proportional to the granularity value (it acts as a linear multiplier). In practice, the communication cost is typically smalller than the reducer processing time for this algorithm, so the granularity should be set to the value where it uses as many of your reducers as possible.
++ For all other algorithms, there are two values: `<num_reducers>` and `<universe_size>`. `<num_reducers>` tells the partitioner how many parts to divide the mapper output into; this number should be equal, or slightly less than, the number of reducers you have. `<universe_size>` sets the size of the universe of strings that the algorithm should check, and may be used to restrict the algorithms to universes of strings smaller than 32 bits. Do *not* set this value to 32 and ignore it if you are using a smaller universe, for horrible slowdowns await.	
 	
 	
 ## DATA GENERATION AND VALIDATION
