@@ -3,7 +3,7 @@
 
 ## ABOUT
 
-This is the set of fuzzy join algorithms tested in the paper, 'Three-way joins on MapReduce: An experimental study' by B. Kimmett, A. Thomo, and V. Srinivasan. (doi: 10.1109/IISA.2014.6878811)
+This is the set of fuzzy join algorithms tested in the paper, 'Fuzzy joins in MapReduce: an experimental study' by B. Kimmett, A. Thomo, and V. Srinivasan. (doi: 10.14778/2824032.2824049)
 
 The algorithms each execute a fuzzy join on strings of bits less than or equal to 32 bits, represented as integers in a Hadoop .seq file. Output is textual binary in order to be human-readable.
 
